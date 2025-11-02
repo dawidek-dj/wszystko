@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang='pl'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Lista koszulek i bluz</title>
+    <style>
+        :root {
+            --bg:#0f1216; --card:#181c22; --text:#e9eef5; --muted:#9aa5b1; --accent:#21c17a;
+            --table-border:rgba(255,255,255,.08); --radius:14px; --shadow:0 8px 24px rgba(0,0,0,.3);
+            --glow:0 0 0 1px rgba(33,193,122,.4), 0 10px 24px rgba(33,193,122,.15);
+        }
+        *{box-sizing:border-box}
+        body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(120deg,#0b0e12,#12161c);color:var(--text);line-height:1.5;padding:24px}
+        header{max-width:1100px;margin:0 auto 16px;display:grid;gap:12px}
+        header h1{margin:0;font-size:clamp(20px,2.6vw,34px)}
+        .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--table-border);padding:10px 12px;border-radius:12px}
+        .filters{display:flex;flex-wrap:wrap;gap:10px}
+        .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#12161c;border:1px solid var(--table-border);cursor:pointer;font-weight:600;font-size:13px}
+        .chip input{accent-color:var(--accent)}
+        .totals{margin-left:auto;color:var(--muted);font-size:14px}
+        .grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .card{background:var(--card);border:1px solid var(--table-border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:grid;grid-template-rows:auto 1fr;transition:box-shadow .2s ease,transform .2s ease}
+        .card.available{box-shadow:var(--glow);border-color:rgba(33,193,122,.45)}
+        .card.hide{display:none}
+        .image-wrap{width:100%;background:#0f1319;display:grid;place-items:center;padding:12px;border-bottom:1px solid var(--table-border)}
+        .image-wrap img{width:100%;max-width:300px;height:auto;display:block;cursor:pointer;}
+        .meta{padding:16px 16px 6px}
+        h2{margin:0 0 6px;font-size:20px;font-weight:700}
+        .subtitle{margin:0 0 12px;color:var(--muted);font-size:14px}
+        table.sizes{width:100%;border-collapse:collapse;font-size:14px;background:rgba(255,255,255,.02);border:1px solid var(--table-border);border-radius:10px;overflow:hidden}
+        table.sizes thead th{text-align:left;padding:10px 12px;border-bottom:1px solid var(--table-border);background:rgba(255,255,255,.03)}
+        table.sizes td{padding:10px 12px;border-bottom:1px dashed var(--table-border)}
+        table.sizes tr:last-child td{border-bottom:none}
+        .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(33,193,122,.12);color:var(--accent);border:1px solid rgba(33,193,122,.3);font-size:12px;font-weight:600;letter-spacing:.3px}
+        .hint{color:var(--muted);font-size:13px}
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .overlay img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+    </style>
+</head>
+<body>
+<header>
+  <div class='toolbar'>
+    <div class='filters' id='filters'>
+      <label class='chip'><input type='checkbox' value='koszulka' checked> Koszulki</label>
+      <label class='chip'><input type='checkbox' value='bluza' checked> Bluzy</label>
+      <label class='chip'><input type='checkbox' value='S' checked> S</label>
+      <label class='chip'><input type='checkbox' value='M' checked> M</label>
+      <label class='chip'><input type='checkbox' value='L' checked> L</label>
+      <label class='chip'><input type='checkbox' value='XL' checked> XL</label>
+      <label class='chip'><input type='checkbox' value='XXL' checked> XXL</label>
+    </div>
+    <div class='totals' id='totals'>Łącznie: –</div>
+  </div>
+</header>
+
+<main class='grid' id='grid'>
+  <!-- Koszulki -->
+  <section class='card' data-type='koszulka' data-size-s='2' data-size-m='2' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka1.png' alt='Koszulka 1'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 1</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>2</td></tr>
+          <tr><td>M</td><td>2</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+  
+    <section class='card' data-type='koszulka' data-size-s='2' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka2.png' alt='Koszulka 2'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 2</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>2</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+
+    <section class='card' data-type='koszulka' data-size-s='2' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka3.png' alt='Koszulka 3'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 3</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>2</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+
+    <section class='card' data-type='koszulka' data-size-s='2' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka4.png' alt='Koszulka 4'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 4</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>2</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+  
+    <section class='card' data-type='koszulka' data-size-s='1' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka5.png' alt='Koszulka 5'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 5</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+  
+    <section class='card' data-type='koszulka' data-size-s='1' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka6.png' alt='Koszulka 6'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 6</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+	
+    <section class='card' data-type='koszulka' data-size-s='2' data-size-m='2' data-size-l='1' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka7.png' alt='Koszulka 7'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 7</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>2</td></tr>
+          <tr><td>M</td><td>2</td></tr>
+          <tr><td>L</td><td>1</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+	
+    <section class='card' data-type='koszulka' data-size-s='0' data-size-m='1' data-size-l='1' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka8.png' alt='Koszulka 8'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 8</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>0</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>1</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+		
+    <section class='card' data-type='koszulka' data-size-s='1' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka9.jpg' alt='Koszulka 9'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 9</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+			
+    <section class='card' data-type='koszulka' data-size-s='1' data-size-m='2' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka10.jpg' alt='Koszulka 10'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 10</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>2</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+				
+    <section class='card' data-type='koszulka' data-size-s='1' data-size-m='2' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka11.png' alt='Koszulka 11'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 11</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>2</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+					
+    <section class='card' data-type='koszulka' data-size-s='1' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka12.png' alt='Koszulka 12'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 12</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+					
+    <section class='card' data-type='koszulka' data-size-s='2' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka13.png' alt='Koszulka 13'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 13</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>2</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+						
+    <section class='card' data-type='koszulka' data-size-s='1' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka14.png' alt='Koszulka 14'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 14</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+							
+    <section class='card' data-type='koszulka' data-size-s='2' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka15.png' alt='Koszulka 15'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 15</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>2</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+								
+    <section class='card' data-type='koszulka' data-size-s='1' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka16.png' alt='Koszulka 16'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 16</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+									
+    <section class='card' data-type='koszulka' data-size-s='0' data-size-m='2' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka17.jpeg' alt='Koszulka 17'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 17</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>0</td></tr>
+          <tr><td>M</td><td>2</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+										
+    <section class='card' data-type='koszulka' data-size-s='0' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka18.jpeg' alt='Koszulka 18'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 18</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>0</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+											
+    <section class='card' data-type='koszulka' data-size-s='1' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka19.jpeg' alt='Koszulka 19'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 19</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+	
+												
+    <section class='card' data-type='koszulka' data-size-s='0' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='koszulka20.jpeg' alt='Koszulka 20'>
+    </div>
+    <div class='meta'>
+      <h2>Koszulka 20</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>0</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+	
+	
+	
+  <!-- Bluzy -->
+	<section class='card' data-type='bluza' data-size-s='1' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza2.jpeg' alt='Bluza 2'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 2</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+	
+	<section class='card' data-type='bluza' data-size-s='0' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza3.png' alt='Bluza 3'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 3</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>0</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+		
+	<section class='card' data-type='bluza' data-size-s='1' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza4.png' alt='Bluza 4'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 4</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+			
+	<section class='card' data-type='bluza' data-size-s='0' data-size-m='2' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza5.jpeg' alt='Bluza 5'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 5</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>0</td></tr>
+          <tr><td>M</td><td>2</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+				
+	<section class='card' data-type='bluza' data-size-s='0' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza6.jpeg' alt='Bluza 6'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 6</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>0</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+					
+	<section class='card' data-type='bluza' data-size-s='1' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza7.jpeg' alt='Bluza 7'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 7</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+						
+	<section class='card' data-type='bluza' data-size-s='1' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza8.jpeg' alt='Bluza 8'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 8</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+							
+	<section class='card' data-type='bluza' data-size-s='1' data-size-m='2' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza9.png' alt='Bluza 9'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 9</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>2</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+								
+	<section class='card' data-type='bluza' data-size-s='1' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza10.jpeg' alt='Bluza 10'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 10</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+									
+	<section class='card' data-type='bluza' data-size-s='2' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza11.jpeg' alt='Bluza 11'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 11</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>2</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+										
+	<section class='card' data-type='bluza' data-size-s='1' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza12.png' alt='Bluza 12'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 12</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+											
+	<section class='card' data-type='bluza' data-size-s='1' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza13.png' alt='Bluza 13'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 13</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+												
+	<section class='card' data-type='bluza' data-size-s='1' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza14.png' alt='Bluza 14'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 14</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+													
+	<section class='card' data-type='bluza' data-size-s='0' data-size-m='0' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza15.png' alt='Bluza 15'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 15</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>0</td></tr>
+          <tr><td>M</td><td>0</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+														
+	<section class='card' data-type='bluza' data-size-s='1' data-size-m='1' data-size-l='0' data-size-xl='0' data-size-xxl='0'>
+    <div class='image-wrap'>
+      <img src='bluza16.png' alt='Bluza 16'>
+    </div>
+    <div class='meta'>
+      <h2>Bluza 16</h2>
+      <table class='sizes'>
+        <thead><tr><th>Rozmiar</th><th>Ilość</th></tr></thead>
+        <tbody>
+          <tr><td>S</td><td>1</td></tr>
+          <tr><td>M</td><td>1</td></tr>
+          <tr><td>L</td><td>0</td></tr>
+          <tr><td>XL</td><td>0</td></tr>
+          <tr><td>XXL</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+	</section>
+</main>
+
+<div class="overlay" id="imageOverlay" onclick="closeImage()">
+    <img id="overlayImage" src="" alt="Podgląd obrazu">
+</div>
+
+<script>
+    function openImage(src) {
+        const overlay = document.getElementById("imageOverlay");
+        const overlayImage = document.getElementById("overlayImage");
+        overlay.style.display = "flex";
+        overlayImage.src = src;
+    }
+
+    function closeImage() {
+        const overlay = document.getElementById("imageOverlay");
+        overlay.style.display = "none";
+    }
+
+    document.querySelectorAll('.image-wrap img').forEach(img => {
+        img.addEventListener('click', function() {
+            openImage(this.src);
+        });
+    });
+</script>
+
+
+<script>
+(function() {
+  const grid = document.getElementById('grid');
+  const filters = document.getElementById('filters');
+  const totalsEl = document.getElementById('totals');
+  const cards = Array.from(grid.querySelectorAll('.card'));
+  const sizeOrder = ['S', 'M', 'L', 'XL', 'XXL'];
+
+  const getActiveFilters = () => {
+    const checked = Array.from(filters.querySelectorAll('input:checked')).map(i => i.value);
+    return checked.length ? checked : [];
+  };
+
+  const qty = (card, size) => parseInt(card.getAttribute('data-size-' + size.toLowerCase())) || 0;
+
+  function applyFilter() {
+    const activeFilters = getActiveFilters();
+    let total = 0;
+    let typeSelected = activeFilters.includes('koszulka') || activeFilters.includes('bluza');
+    let sizeSelected = activeFilters.some(size => ['S', 'M', 'L', 'XL', 'XXL'].includes(size));
+
+    cards.forEach(card => {
+      const isTypeVisible = activeFilters.includes(card.getAttribute('data-type')) || !typeSelected;
+      const isSizeVisible = activeFilters.some(size => qty(card, size) > 0);
+      
+      // Obliczanie widoczności na podstawie typu i rozmiaru
+      const visible = isTypeVisible && (sizeSelected ? isSizeVisible : true);
+      
+      card.classList.toggle('hide', !visible);
+      card.classList.toggle('available', visible);
+
+      if (visible) {
+        activeFilters.forEach(size => total += qty(card, size));
+      }
+    });
+
+    // Jeśli nie wybrano żadnego rozmiaru, oblicz sumę wszystkich produktów
+    if (!sizeSelected) {
+      cards.forEach(card => {
+        if (card.classList.contains('available')) {
+          total += qty(card, 'S') + qty(card, 'M') + qty(card, 'L') + qty(card, 'XL') + qty(card, 'XXL');
+        }
+      });
+    }
+
+    totalsEl.textContent = `Łącznie: ${total} szt.`;
+  }
+
+  // Dodanie opcji "Wyczyść filtry"
+  const clearFiltersButton = document.createElement('button');
+  clearFiltersButton.textContent = 'Wyczyść filtry';
+  clearFiltersButton.addEventListener('click', () => {
+    filters.querySelectorAll('input').forEach(input => input.checked = false);
+    applyFilter(); // Resetuj filtr
+  });
+  filters.appendChild(clearFiltersButton);
+
+  filters.addEventListener('change', applyFilter);
+  applyFilter(); // start
+})();
+</script>
+</body>
+</html>
