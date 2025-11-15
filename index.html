@@ -70,45 +70,45 @@
     <div class='filters' id='filters'>
       <label class='chip'><input type='checkbox' value='koszulka' checked> Koszulki</label>
       <label class='chip'><input type='checkbox' value='bluza' checked> Bluzy</label>
+      <label class='chip'><input type='checkbox' value='sluchawki' checked> Słuchawki</label>
       <label class='chip'><input type='checkbox' value='S' checked> S</label>
       <label class='chip'><input type='checkbox' value='M' checked> M</label>
       <label class='chip'><input type='checkbox' value='L' checked> L</label>
-	  <label class='chip'><input type='checkbox' value='słuchawki' checked> słuchawki</label>
     </div>
     <div class='totals' id='totals'>Łącznie: –</div>
   </div>
 </header>
 <main class='grid' id='grid'>
-  <!--Inne -->
-	<section class='card' data-type='słuchawki' data-size-słuchawki='2'>
+<!-- SŁUCHAWKI -->
+<section class='card' data-type='sluchawki' data-price='80' data-qty='2'>
     <div class='image-wrap'>
-      <img src='Philips słuchawki.jpg' alt='słuchawki'>
+      <img src='Philips słuchawki.jpg' alt='Słuchawki Philips SHL5005/00'>
     </div>
     <div class='meta'>
       <h2>Słuchawki Philips SHL5005/00</h2>
       <table class='sizes'>
         <thead><tr><th>Cena</th><th>Ilość</th></tr></thead>
         <tbody>
-          <tr><td>80</td><td>2</td></tr>
+          <tr><td>80 zł</td><td>2</td></tr>
         </tbody>
       </table>
     </div>
-	</section>
-	<main class='grid' id='grid'>
-	<section class='card' data-type='słuchawki' data-size-słuchawki='1'>
+</section>
+
+<section class='card' data-type='sluchawki' data-price='600' data-qty='1'>
     <div class='image-wrap'>
-      <img src='JBL słuchawki.jpg' alt='słuchawki2'>
+      <img src='JBL słuchawki.jpg' alt='Słuchawki JBL Tour One M2'>
     </div>
     <div class='meta'>
       <h2>Słuchawki JBL Tour One M2</h2>
       <table class='sizes'>
         <thead><tr><th>Cena</th><th>Ilość</th></tr></thead>
         <tbody>
-          <tr><td>600</td><td>1</td></tr>
+          <tr><td>600 zł</td><td>1</td></tr>
         </tbody>
       </table>
     </div>
-	</section>
+</section>
   <!-- Koszulki -->
   <section class='card' data-type='koszulka' data-size-s='1' data-size-m='1' data-size-l='0'>
     <div class='image-wrap'>
@@ -364,7 +364,7 @@
       </table>
     </div>
 	</section>
-								
+								 
     <section class='card' data-type='koszulka' data-size-s='1' data-size-m='0' data-size-l='0'>
     <div class='image-wrap'>
       <img src='koszulka16.png' alt='Koszulka 16'>
@@ -416,7 +416,7 @@
     </div>
 	</section>
 	
-												
+												 
     <section class='card' data-type='koszulka' data-size-s='0' data-size-m='1' data-size-l='0'>
     <div class='image-wrap'>
       <img src='koszulka20.jpeg' alt='Koszulka 20'>
@@ -433,7 +433,6 @@
       </table>
     </div>
 	</section>
-	
 	
 	
   <!-- Bluzy -->
@@ -572,7 +571,7 @@
       </table>
     </div>
 	</section>
-								
+								 
 	<section class='card' data-type='bluza' data-size-s='1' data-size-m='1' data-size-l='0'>
     <div class='image-wrap'>
       <img src='bluza10.jpeg' alt='Bluza 10'>
@@ -589,7 +588,7 @@
       </table>
     </div>
 	</section>
-									
+									 
 	<section class='card' data-type='bluza' data-size-s='1' data-size-m='0' data-size-l='0'>
     <div class='image-wrap'>
       <img src='bluza11.jpeg' alt='Bluza 11'>
@@ -606,6 +605,8 @@
       </table>
     </div>
 	</section>
+
+</main>
 
 <div class="overlay" id="imageOverlay" onclick="closeImage()">
     <img id="overlayImage" src="" alt="Podgląd obrazu">
@@ -631,69 +632,75 @@
     });
 </script>
 
-
 <script>
 (function() {
   const grid = document.getElementById('grid');
   const filters = document.getElementById('filters');
   const totalsEl = document.getElementById('totals');
   const cards = Array.from(grid.querySelectorAll('.card'));
-  const sizeOrder = ['S', 'M', 'L'];
 
   const getActiveFilters = () => {
     const checked = Array.from(filters.querySelectorAll('input:checked')).map(i => i.value);
     return checked.length ? checked : [];
   };
 
-  const qty = (card, size) => parseInt(card.getAttribute('data-size-' + size.toLowerCase())) || 0;
-
   function applyFilter() {
-    const activeFilters = getActiveFilters();
+    const active = getActiveFilters();
     let total = 0;
-    let typeSelected = activeFilters.includes('koszulka') || activeFilters.includes('bluza');
-    let sizeSelected = activeFilters.some(size => ['S', 'M', 'L'].includes(size));
 
     cards.forEach(card => {
-      const isTypeVisible = activeFilters.includes(card.getAttribute('data-type')) || !typeSelected;
-      const isSizeVisible = activeFilters.some(size => qty(card, size) > 0);
-      
-      // Obliczanie widoczności na podstawie typu i rozmiaru
-      const visible = isTypeVisible && (sizeSelected ? isSizeVisible : true);
-      
+      const type = card.getAttribute('data-type');
+
+      let visible = active.includes(type) || active.length === 0;
+
+      if (type === 'koszulka' || type === 'bluza') {
+        const s = parseInt(card.getAttribute('data-size-s')) || 0;
+        const m = parseInt(card.getAttribute('data-size-m')) || 0;
+        const l = parseInt(card.getAttribute('data-size-l')) || 0;
+
+        const sizeFilters = active.filter(v => ['S','M','L'].includes(v));
+
+        if (sizeFilters.length > 0) {
+          visible = sizeFilters.some(size => {
+            if (size === 'S') return s > 0;
+            if (size === 'M') return m > 0;
+            if (size === 'L') return l > 0;
+          }) && active.includes(type);
+        }
+
+        if (visible) total += s + m + l;
+      }
+
+      if (type === 'sluchawki') {
+        const qty = parseInt(card.getAttribute('data-qty'));
+        if (active.includes('sluchawki')) {
+          visible = true;
+          total += qty;
+        } else {
+          visible = false;
+        }
+      }
+
       card.classList.toggle('hide', !visible);
       card.classList.toggle('available', visible);
-
-      if (visible) {
-        activeFilters.forEach(size => total += qty(card, size));
-      }
     });
-
-    // Jeśli nie wybrano żadnego rozmiaru, oblicz sumę wszystkich produktów
-    if (!sizeSelected) {
-      cards.forEach(card => {
-        if (card.classList.contains('available')) {
-          total += qty(card, 'S') + qty(card, 'M') + qty(card, 'L');
-        }
-      });
-    }
 
     totalsEl.textContent = `Łącznie: ${total} szt.`;
   }
 
-  // Dodanie opcji "Wyczyść filtry"
-  const clearFiltersButton = document.createElement('button');
-  clearFiltersButton.textContent = 'Wyczyść filtry';
-  clearFiltersButton.addEventListener('click', () => {
-    filters.querySelectorAll('input').forEach(input => input.checked = false);
-    applyFilter(); // Resetuj filtr
+  // Wyczyść filtry
+  const clearBtn = document.createElement('button');
+  clearBtn.textContent = 'Wyczyść filtry';
+  clearBtn.addEventListener('click', () => {
+    filters.querySelectorAll('input').forEach(i => i.checked = false);
+    applyFilter();
   });
-  filters.appendChild(clearFiltersButton);
+  filters.appendChild(clearBtn);
 
   filters.addEventListener('change', applyFilter);
-  applyFilter(); // start
+  applyFilter();
 })();
 </script>
+
 </body>
 </html>
-
-
