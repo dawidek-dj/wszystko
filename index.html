@@ -697,6 +697,16 @@
         }
       }
 
+	  if (type === 'inne') {
+        const qty = parseInt(card.getAttribute('data-qty'));
+        if (active.includes('inne')) {
+          visible = true;
+          total += qty;
+        } else {
+          visible = false;
+        }
+      }
+
       card.classList.toggle('hide', !visible);
       card.classList.toggle('available', visible);
     });
